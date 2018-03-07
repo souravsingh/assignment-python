@@ -1,5 +1,3 @@
-# This is Work in progress, since the code has not been tested yet.
-
 
 def nearly_equal(str1, str2):
     """Count the # of differences between equal length strings str1 and str2"""
