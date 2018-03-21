@@ -1,6 +1,74 @@
-import os, sys
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import os
+import sys
 
-filename, suffix = os.path.splitext(sys.argv[1])
-print("Running the splitting command on file {} with {} lines".format(sys.argv[1], sys.argv[2]))
-os.system("split {} -l {} {}-part -d --verbose --additional-suffix {}".format(sys.argv[1], sys.argv[2], filen, suffx))
-print("File splitting done.")
+
+class FileSplitter:
+
+    def __init__(self):
+        self.parse_args(sys.argv)
+
+    @staticmethod
+    def run():
+        splitter = FileSplitter()
+        splitter.split()
+
+    def split(self):
+        file_number = 1
+        line_number = 1
+        print 'Splitting %s into multiple files with %s lines' \
+            % (os.path.join(self.working_dir, self.file_base_name
+               + self.file_ext), str(self.split_size))
+        out_file = self.get_new_file(file_number)
+        for line in self.in_file:
+            out_file.write(line)
+            line_number += 1
+            if line_number == self.split_size:
+                out_file.close()
+                file_number += 1
+                line_number = 1
+                out_file = self.get_new_file(file_number)
+
+        out_file.close()
+
+        print 'Created %s files.' % str(file_number)
+
+    def get_new_file(self, file_number):
+        """return a new file object ready to write to"""
+
+        new_file_name = '%s.%s%s' % (self.file_base_name,
+                str(file_number), self.file_ext)
+        new_file_path = os.path.join(self.working_dir, new_file_name)
+        print 'creating file %s' % new_file_path
+        return open(new_file_path, 'w')
+
+    def parse_args(self, argv):
+        """parse args and set up instance variables"""
+
+        try:
+            self.split_size = 10
+            if len(argv) > 2:
+                self.split_size = int(argv[2])
+            self.file_name = argv[1]
+            self.in_file = open(self.file_name, 'r')
+            self.working_dir = os.getcwd()
+            (self.file_base_name, self.file_ext) = \
+                os.path.splitext(self.file_name)
+        except:
+            print self.usage()
+            sys.exit(1)
+def main():
+	import sys
+	try:
+		filename, lines = sys.argv[1], int(sys.argv[2])
+	except IndexError:
+		raise SystemExit('Please provide filename and number of lines')
+	except ValueError:
+		raise SystemExit('Please provide lines as numbers')
+
+	split = Split(filename, lines)
+	split.execute()
+  
+if __name__ == '__main__':
+    FileSplitter.run()
