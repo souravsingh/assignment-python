@@ -17,9 +17,6 @@ class FileSplitter:
     def split(self):
         file_number = 1
         line_number = 1
-        print 'Splitting %s into multiple files with %s lines' \
-            % (os.path.join(self.working_dir, self.file_base_name
-               + self.file_ext), str(self.split_size))
         out_file = self.get_new_file(file_number)
         for line in self.in_file:
             out_file.write(line)
@@ -29,7 +26,6 @@ class FileSplitter:
                 file_number += 1
                 line_number = 1
                 out_file = self.get_new_file(file_number)
-
         out_file.close()
 
         print 'Created %s files.' % str(file_number)
@@ -58,17 +54,3 @@ class FileSplitter:
         except:
             print self.usage()
             sys.exit(1)
-def main():
-	import sys
-	try:
-		filename, lines = sys.argv[1], int(sys.argv[2])
-	except IndexError:
-		raise SystemExit('Please provide filename and number of lines')
-	except ValueError:
-		raise SystemExit('Please provide lines as numbers')
-
-	split = Split(filename, lines)
-	split.execute()
-  
-if __name__ == '__main__':
-    FileSplitter.run()
